@@ -31,14 +31,13 @@ void ProveShortness(ShortProof &proof, const ShortStatement &stmt){
     SampleGaussian(Y[2],Sigma_A); SampleGaussian(Y[3],Sigma_A);
     MatrixMult(proof.W,stmt.A,Y);
     SampleChallengeMatrix(proof.C);
-    success = RejectionSampling();}
+    success = RejectionSamplingShortness();}
   MatrixMult(SC,stmt.S,proof.C);
-  MatrixAdd(proof.Z,SC,Y);
-}
+  MatrixAdd(proof.Z,SC,Y);}
 
 void VerifyShortness(bool &b, const ShortProof &proof,
   const ShortStatement &stmt){
-  b = true; Mat<ZZ_pE> AZ,TC, TCW; AZ.SetDims(2,lambda+2);
+  b = true; Mat<ZZ_pE> AZ, TC, TCW; AZ.SetDims(2,lambda+2);
   TC.SetDims(2,lambda+2); TCW.SetDims(2,lambda+2);
   MatrixMult(AZ,stmt.A,proof.Z);
   MatrixMult(TC,stmt.T,proof.C);

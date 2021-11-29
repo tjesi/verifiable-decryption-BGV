@@ -27,7 +27,7 @@ void RoundModP(ZZ_pE &m){
 void Decrypt(ZZ_pE &m, const EncKey &encKey, const Ciphertext &ctx){
   m = ctx.CTXv - encKey.SKs*ctx.CTXu, RoundModP(m);}
 
-void ExtractNoise(Vec<Commitment>&noiseCom,const Statement &stmt,
+void ExtractNoise(Vec<Commitment>&noiseCom, const Statement &stmt,
   const EncKey &encKey, const ComKey &comKey){
   for (int j = 0; j < tau; j++){
     ZZ_pE noise = (stmt.ciphertexts[j].CTXv -

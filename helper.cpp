@@ -1,5 +1,6 @@
 
 #include "helper.h"
+#include <math.h>
 
 void SampleBounded(ZZ_pE &r, const long &bound){
   ZZ_pX f = ZZ_pX(INIT_MONO, N-1);
@@ -24,40 +25,47 @@ void SampleGaussian(Vec<ZZ_pE> &y, const double &sigma){
       SetCoeff(f,i,round(d(gen)));
     } y[j] = to_ZZ_pE(f);}}
 
+void SquareNorm(double &norm, const ZZ_pE &poly){
+  vector<double> v = PolyToVec(poly);
+  for(int i = 0; i < N; i++){norm += pow(v[i],2);}}
+
 bool CheckNorm(const Vec<ZZ_pE> &z, const double &bound){
   for(int j = 0; j < 3; j++){
-    long sum = 0; Vec<ZZ_p> v = PolyToVec(z[j]);
-    for(int i = 0; i < N; i++){
-      long temp = conv<long>(v[i])-(conv<long>(v[i])>q/2)*q;
-      sum += pow(temp,2);}
-    double norm = sqrt(sum);
-    if (norm > bound) {return false;}}
+    double norm = 0; SquareNorm(norm,z[j]);
+    if (log2(norm) > bound) {return false;}}
   return true;}
 
 void MatrixMult(Mat<ZZ_pE>& X, const Mat<ZZ_pE>& A, const Mat<ZZ_pE>& B){
-  ZZ_pE tmp;
   for (int i = 0; i < A.NumRows(); i++){
     for (int j = 0; j < B.NumCols(); j++){
-      tmp = 0;
+      ZZ_pE tmp = ZZ_pE(0);
       for(int k = 0; k < A.NumCols(); k++){
         tmp += A[i][k] * B[k][j];}
-      X[i][j] = tmp;
-}}}
+      X[i][j] = tmp;}}}
 
 void MatrixAdd(Mat<ZZ_pE> &X, const Mat<ZZ_pE> &A, const Mat<ZZ_pE> &B){
   for (int i = 0; i < A.NumRows(); i++){
     for (int j = 0; j < A.NumCols(); j++){
-      X[i][j] = A[i][j] + B[i][j];
-}}}
+      X[i][j] = A[i][j] + B[i][j];}}}
 
-Vec<ZZ_p> PolyToVec(const ZZ_pE &input){
-    Vec<ZZ_p> output; output.SetLength(input.degree());
+vector<double> PolyToVec(const ZZ_pE &input){
+    vector<double> output(N);
     ZZ_pX f = conv<ZZ_pX>(input);
-    for (int i=0; i<output.length(); i++){output[i] = coeff(f,i);}
+    for (int i=0; i<N; i++){
+      output[i] = conv<double>(rep(coeff(f,i)));
+      if(output[i] > q/2){output[i] -= q;}}
   return output;}
 
-bool RejectionSampling(){
+bool RejectionSamplingShortness(){
   // We are cheating here, returning accept with prob 1/M:
   double u = ((double)rand()/(double)RAND_MAX);
-  return u <= double(0.33);
-}
+  return u <= double(0.33);}
+
+void RejectionSamplingLinearity(bool &success,
+  const Vec<ZZ_pE> &z, const Vec<ZZ_pE> & cr){
+  double u = ((double)rand()/(double)RAND_MAX);
+  double ip = 0, norm = 0; vector<double> zvec(N), rvec(N);
+  for (int i = 0; i < 3; i++){SquareNorm(norm,cr[i]);
+    zvec = PolyToVec(z[i]); rvec = PolyToVec(cr[i]);
+    for (int j = 0; j < N; j++){ip += zvec[j]*rvec[j];}}
+  success = u < MLinInv * exp((-2*ip+norm)/twosigma2);}

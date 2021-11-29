@@ -11,12 +11,12 @@ using namespace NTL;
 
 class Ciphertext {
 public:
-  ZZ_pE CTXu,CTXv;
+  ZZ_pE CTXu, CTXv;
 };
 
 class EncKey {
 public:
-  ZZ_pE PKa,PKb,SKs,SKe;
+  ZZ_pE PKa, PKb, SKs, SKe;
 };
 
 class Statement {

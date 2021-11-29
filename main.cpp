@@ -19,7 +19,7 @@ public:
 void PrintTimings(const clock_t begin, const clock_t end){
   double elapsed_secs = double(end - begin)/CLOCKS_PER_SEC;
   cout << "Total time: " <<elapsed_secs << " sec\n";
-  cout << "Time / ctx: " <<elapsed_secs/(tau) << " sec\n";
+  cout << "Time / ctx: " <<elapsed_secs/tau << " sec\n";
   cout << "\n";
 }
 
@@ -38,7 +38,7 @@ int main()
   Commitment keyCom;
   Statement stmt;
   Proof proof;
-  bool bLin,bShort;
+  bool bLin, bShort;
   clock_t begin, end;
 
   // Print number of ciphertexts
@@ -87,5 +87,5 @@ int main()
   end = clock(); PrintTimings(begin,end);
 
   // Print accept (1) or reject (0)
-  cout << (bLin && bShort) << "\n";
+  cout << "ACCEPT? " << (bLin && bShort) << "\n";
 }
