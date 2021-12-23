@@ -31,9 +31,9 @@ void ProveShortness(ShortProof &proof, const ShortStatement &stmt){
     SampleGaussian(Y[2],Sigma_A); SampleGaussian(Y[3],Sigma_A);
     MatrixMult(proof.W,stmt.A,Y);
     SampleChallengeMatrix(proof.C);
-    success = RejectionSamplingShortness();}
-  MatrixMult(SC,stmt.S,proof.C);
-  MatrixAdd(proof.Z,SC,Y);}
+    MatrixMult(SC,stmt.S,proof.C);
+    MatrixAdd(proof.Z,SC,Y);
+    RejectionSamplingShortness(success, proof.Z, SC);}}
 
 void VerifyShortness(bool &b, const ShortProof &proof,
   const ShortStatement &stmt){

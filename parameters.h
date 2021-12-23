@@ -11,10 +11,12 @@ const long tau         = 2048;
 const long lambda      = 128;
 const long B           = 1;
 const double MLinInv   = 1/sqrt(3);
+const double MAInv     = 1/3.0;
 const double Sigma_A   = 22668973295;
 const double Bound_A   = 83;    // # bits * 2
+const double TwoSigmaA2 = 2*Sigma_A*Sigma_A;
 const double Sigma_C   = 61147;
 const double Bound_C   = 44.8;  // # bits * 2
-const double twosigma2 = 2*Sigma_C*Sigma_C;
+const double TwoSigmaC2 = 2*Sigma_C*Sigma_C;
 
 #endif

@@ -56,10 +56,20 @@ vector<double> PolyToVec(const ZZ_pE &input){
       if(output[i] > q/2){output[i] -= q;}}
   return output;}
 
-bool RejectionSamplingShortness(){
-  // We are cheating here, returning accept with prob 1/M:
+void RejectionSamplingShortness(bool &success,
+  const Mat<ZZ_pE> &Z, const Mat<ZZ_pE> &SC){
+  double ip = 0, maxnorm = 0;
+  for (int j = 0; j < lambda+2; j++){
+    double norm = 0; for (int i = 0; i < 4; i++){
+      SquareNorm(norm, SC[i][j]);}
+    if (norm > maxnorm){maxnorm = norm;}}
+  vector<double> zvec(N), scvec(N);
+  for (int i = 0; i < 4; i++){for (int j = 0; j < lambda+2; j++){
+        zvec = PolyToVec(Z[i][j]); scvec = PolyToVec(SC[i][j]);
+        for (int j = 0; j < N; j++){ip += zvec[j]*scvec[j];}}}
   double u = ((double)rand()/(double)RAND_MAX);
-  return u <= double(0.33);}
+  cout << MAInv << "\n";
+  success = u < MAInv * exp((-2*ip+maxnorm)/TwoSigmaA2);}
 
 void RejectionSamplingLinearity(bool &success,
   const Vec<ZZ_pE> &z, const Vec<ZZ_pE> & cr){
@@ -68,4 +78,4 @@ void RejectionSamplingLinearity(bool &success,
   for (int i = 0; i < 3; i++){SquareNorm(norm,cr[i]);
     zvec = PolyToVec(z[i]); rvec = PolyToVec(cr[i]);
     for (int j = 0; j < N; j++){ip += zvec[j]*rvec[j];}}
-  success = u < MLinInv * exp((-2*ip+norm)/twosigma2);}
+  success = u < MLinInv * exp((-2*ip+norm)/TwoSigmaC2);}

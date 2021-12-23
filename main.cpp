@@ -18,8 +18,8 @@ public:
 
 void PrintTimings(const clock_t begin, const clock_t end){
   double elapsed_secs = double(end - begin)/CLOCKS_PER_SEC;
-  cout << "Total time: " <<elapsed_secs << " sec\n";
-  cout << "Time / ctx: " <<elapsed_secs/tau << " sec\n";
+  cout << "Total time: " << elapsed_secs << " sec\n";
+  cout << "Time / ctx: " << 1000*elapsed_secs/tau << " ms\n";
   cout << "\n";
 }
 

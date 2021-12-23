@@ -28,4 +28,4 @@ vector<double> PolyToVec(const ZZ_pE &);
 
 void RejectionSamplingLinearity (bool &,const Vec<ZZ_pE> &,const Vec<ZZ_pE> &);
 
-bool RejectionSamplingShortness();
+void RejectionSamplingShortness(bool &, const Mat<ZZ_pE> &,const Mat<ZZ_pE> &);
